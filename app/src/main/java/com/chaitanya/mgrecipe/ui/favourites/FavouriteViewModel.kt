@@ -10,13 +10,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteViewModel @Inject constructor(private val repository: DetailRepository) : ViewModel() {
+class FavouriteViewModel @Inject constructor(private val repository: DetailRepository) :
+    ViewModel() {
 
     val allRecipes: LiveData<List<RecipeEntity>> = repository.getFavouriteRecipes()
 
-    fun getRecipeById(id: Long,returnData:(RecipeEntity?)->Unit) {
+    fun getRecipeById(id: Long, returnData: (RecipeEntity?) -> Unit) {
         viewModelScope.launch {
-            returnData(repository.getFavouriteRecipeById(id) )
+            returnData(repository.getFavouriteRecipeById(id))
         }
     }
 }

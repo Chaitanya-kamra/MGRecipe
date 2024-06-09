@@ -2,10 +2,10 @@ package com.chaitanya.mgrecipe.ui.detail
 
 import android.os.Bundle
 import android.text.Html
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -26,17 +26,17 @@ import java.util.Locale
 @AndroidEntryPoint
 class RecipeDetailFragment : Fragment() {
 
-    private var binding : FragmentRecipeDetailBinding? =  null
+    private var binding: FragmentRecipeDetailBinding? = null
 
-    val args : RecipeDetailFragmentArgs by navArgs()
-    val viewModel : DetailViewModel by viewModels()
-    var equipmentAdapter : ImageTextAdapter? = null
+    val args: RecipeDetailFragmentArgs by navArgs()
+    val viewModel: DetailViewModel by viewModels()
+    var equipmentAdapter: ImageTextAdapter? = null
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val fragmentBinding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
         binding = fragmentBinding
         return fragmentBinding.root
@@ -44,7 +44,7 @@ class RecipeDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val id =  args.recipeId
+        val id = args.recipeId
         val recipeLocal = args.recipeEntity
         equipmentAdapter = ImageTextAdapter()
         binding?.layoutCommon?.rvEquipments?.adapter = equipmentAdapter
@@ -68,70 +68,69 @@ class RecipeDetailFragment : Fragment() {
 
     private fun setUpLocaldata(data: RecipeEntity) {
         binding?.apply {
-            ivImage.loadImage(data?.image)
+            ivImage.loadImage(data.image)
             layoutReadin.apply {
                 type.text = "Ready in"
-                value.text = data?.readyInMinutes.toString()
+                value.text = data.readyInMinutes.toString()
             }
             layoutServing.apply {
                 type.text = "Servings"
-                value.text = data?.servings.toString()
+                value.text = data.servings.toString()
             }
             layoutPrice.apply {
                 type.text = "Price/serving"
-                value.text = data?.pricePerServing.toString()
+                value.text = data.pricePerServing.toString()
             }
-            data?.id?.let {id->
-                viewModel.isRecipeExist(id){
-                    if (!it){
+            data.id?.let { id ->
+                viewModel.isRecipeExist(id) {
+                    if (!it) {
                         binding?.ivFavorite?.setImageResource(R.drawable.heart_outlined)
-                    }else {
+                    } else {
                         binding?.ivFavorite?.setImageResource(R.drawable.heart_filled)
                     }
                 }
             }
             val ingredientAdapter = ImageTextAdapter()
             rvIngredients.adapter = ingredientAdapter
-            ingredientAdapter.submitList(data?.extendedIngredients?.map { ingredient ->
+            ingredientAdapter.submitList(data.extendedIngredients?.map { ingredient ->
                 Pair(("https://img.spoonacular.com/ingredients_100x100/" + ingredient.image),
                     ingredient.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
             })
 
             layoutCommon.apply {
-                tvInstructions.text =   Html.fromHtml(data?.instructions,Html.FROM_HTML_MODE_LEGACY)
-                tvSummary.text = Html.fromHtml(data?.summary,Html.FROM_HTML_MODE_LEGACY)
-                tvNutrients.text = data?.nutrition?.let { formatNutrition(it) }?:""
-                AnimationUtil.toggleArrow(ivToogleNutrients,false)
+                tvInstructions.text = Html.fromHtml(data.instructions, Html.FROM_HTML_MODE_LEGACY)
+                tvSummary.text = Html.fromHtml(data.summary, Html.FROM_HTML_MODE_LEGACY)
+                tvNutrients.text = data.nutrition?.let { formatNutrition(it) } ?: ""
+                AnimationUtil.toggleArrow(ivToogleNutrients, false)
                 AnimationUtil.expand(tvNutrients)
                 ivToogleNutrients.setOnClickListener {
                     if (tvNutrients.visibility == View.VISIBLE) {
                         AnimationUtil.collapse(tvNutrients)
-                        AnimationUtil.toggleArrow(ivToogleNutrients,true)
-                    }
-                    else {
-                        AnimationUtil.toggleArrow(ivToogleNutrients,false)
+                        AnimationUtil.toggleArrow(ivToogleNutrients, true)
+                    } else {
+                        AnimationUtil.toggleArrow(ivToogleNutrients, false)
                         AnimationUtil.expand(tvNutrients)
                     }
                 }
             }
             mcvFavorite.setOnClickListener {
 
-                    viewModel.isRecipeExist(data.id){
-                        if (it){
-                            viewModel.removeFavourite(data.id)
-                            ivFavorite.setImageResource(R.drawable.heart_outlined)
-                        }else {
-                            viewModel.addLocalToFavorite(data)
-                            ivFavorite.setImageResource(R.drawable.heart_filled)
-                        }
+                viewModel.isRecipeExist(data.id) {
+                    if (it) {
+                        viewModel.removeFavourite(data.id)
+                        ivFavorite.setImageResource(R.drawable.heart_outlined)
+                    } else {
+                        viewModel.addLocalToFavorite(data)
+                        ivFavorite.setImageResource(R.drawable.heart_filled)
                     }
+                }
 
             }
 
         }
         equipmentAdapter?.submitList(
-            data.equipment?.map {ingredient ->
-                Pair("https://img.spoonacular.com/equipment_100x100/"+ingredient.image,
+            data.equipment?.map { ingredient ->
+                Pair("https://img.spoonacular.com/equipment_100x100/" + ingredient.image,
                     ingredient.name.replaceFirstChar {
                         if (it.isLowerCase()) it.titlecase(
                             Locale.ROOT
@@ -142,8 +141,8 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun bindObserver() {
-        viewModel.recipeById.observe(viewLifecycleOwner){networkResult->
-            when(networkResult){
+        viewModel.recipeById.observe(viewLifecycleOwner) { networkResult ->
+            when (networkResult) {
                 is NetworkResult.Error -> {
                     binding?.apply {
                         scroll.gone()
@@ -151,6 +150,7 @@ class RecipeDetailFragment : Fragment() {
                         tvError.visible()
                     }
                 }
+
                 is NetworkResult.Loading -> {
                     binding?.apply {
                         scroll.gone()
@@ -158,6 +158,7 @@ class RecipeDetailFragment : Fragment() {
                         tvError.gone()
                     }
                 }
+
                 is NetworkResult.Success -> {
                     viewModel.recipeData = networkResult.data
                     setUpdata(networkResult.data)
@@ -169,19 +170,21 @@ class RecipeDetailFragment : Fragment() {
                 }
             }
         }
-        viewModel.recipeEquipmmentById.observe(viewLifecycleOwner){networkResult->
-            when(networkResult){
+        viewModel.recipeEquipmmentById.observe(viewLifecycleOwner) { networkResult ->
+            when (networkResult) {
                 is NetworkResult.Error -> {
 
                 }
+
                 is NetworkResult.Loading -> {
 
                 }
+
                 is NetworkResult.Success -> {
                     viewModel.recipeEquipment = networkResult.data
                     equipmentAdapter?.submitList(
-                        networkResult.data?.equipment?.map {ingredient ->
-                            Pair("https://img.spoonacular.com/equipment_100x100/"+ingredient.image,
+                        networkResult.data?.equipment?.map { ingredient ->
+                            Pair("https://img.spoonacular.com/equipment_100x100/" + ingredient.image,
                                 ingredient.name.replaceFirstChar {
                                     if (it.isLowerCase()) it.titlecase(
                                         Locale.ROOT
@@ -210,11 +213,11 @@ class RecipeDetailFragment : Fragment() {
                 type.text = "Price/serving"
                 value.text = data?.pricePerServing.toString()
             }
-            data?.id?.let {id->
-                viewModel.isRecipeExist(id){
-                    if (!it){
+            data?.id?.let { id ->
+                viewModel.isRecipeExist(id) {
+                    if (!it) {
                         binding?.ivFavorite?.setImageResource(R.drawable.heart_outlined)
-                    }else {
+                    } else {
                         binding?.ivFavorite?.setImageResource(R.drawable.heart_filled)
                     }
                 }
@@ -227,29 +230,28 @@ class RecipeDetailFragment : Fragment() {
             })
 
             layoutCommon.apply {
-                tvInstructions.text =   Html.fromHtml(data?.instructions,Html.FROM_HTML_MODE_LEGACY)
-                tvSummary.text = Html.fromHtml(data?.summary,Html.FROM_HTML_MODE_LEGACY)
-                tvNutrients.text = data?.nutrition?.let { formatNutrition(it) }?:""
-                AnimationUtil.toggleArrow(ivToogleNutrients,false)
+                tvInstructions.text = Html.fromHtml(data?.instructions, Html.FROM_HTML_MODE_LEGACY)
+                tvSummary.text = Html.fromHtml(data?.summary, Html.FROM_HTML_MODE_LEGACY)
+                tvNutrients.text = data?.nutrition?.let { formatNutrition(it) } ?: ""
+                AnimationUtil.toggleArrow(ivToogleNutrients, false)
                 AnimationUtil.expand(tvNutrients)
                 lnlNutrients.setOnClickListener {
                     if (tvNutrients.visibility == View.VISIBLE) {
                         AnimationUtil.collapse(tvNutrients)
-                        AnimationUtil.toggleArrow(ivToogleNutrients,true)
-                    }
-                    else {
-                        AnimationUtil.toggleArrow(ivToogleNutrients,false)
+                        AnimationUtil.toggleArrow(ivToogleNutrients, true)
+                    } else {
+                        AnimationUtil.toggleArrow(ivToogleNutrients, false)
                         AnimationUtil.expand(tvNutrients)
                     }
                 }
             }
             mcvFavorite.setOnClickListener {
-                if (viewModel.recipeEquipment!= null&& viewModel.recipeData!= null&& viewModel.recipeData?.id != null){
-                    viewModel.isRecipeExist(viewModel.recipeData!!.id){
-                        if (it){
+                if (viewModel.recipeEquipment != null && viewModel.recipeData != null && viewModel.recipeData?.id != null) {
+                    viewModel.isRecipeExist(viewModel.recipeData!!.id) {
+                        if (it) {
                             viewModel.removeFavourite(viewModel.recipeData!!.id)
                             ivFavorite.setImageResource(R.drawable.heart_outlined)
-                        }else {
+                        } else {
                             viewModel.addToFavorite()
                             ivFavorite.setImageResource(R.drawable.heart_filled)
                         }

@@ -28,7 +28,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val fragmentBinding = FragmentLoginBinding.inflate(inflater, container, false)
         binding = fragmentBinding
         return fragmentBinding.root
@@ -52,20 +52,23 @@ class LoginFragment : Fragment() {
             activityResult.launch(signInIntent)
         }
     }
-    private val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
 
-                val account = task.getResult(ApiException::class.java)
-                SharedPreference.setUserName(account.displayName)
-                SharedPreference.setLoggedIn(true)
-                findNavController().navigate(R.id.action_loginFragment_to_homeFragment2)
-            } catch (e: ApiException) {
-            }catch (_:Exception){}
+    private val activityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                try {
 
+                    val account = task.getResult(ApiException::class.java)
+                    SharedPreference.setUserName(account.displayName)
+                    SharedPreference.setLoggedIn(true)
+                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment2)
+                } catch (e: ApiException) {
+                } catch (_: Exception) {
+                }
+
+            }
+            binding.pbLoad.gone()
         }
-        binding.pbLoad.gone()
-    }
 }

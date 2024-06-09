@@ -9,7 +9,8 @@ import com.chaitanya.mgrecipe.databinding.ItemPopularRecipeBinding
 import com.chaitanya.mgrecipe.utility.loadImage
 import com.chaitanya.recipedata.models.Recipe
 
-class PopularProductAdapter(val clickListener: (String) -> Unit
+class PopularProductAdapter(
+    val clickListener: (String) -> Unit
 ) : ListAdapter<Recipe, PopularProductAdapter.ViewHolder>(DiffUtilCallBack()) {
 
     inner class ViewHolder(val binding: ItemPopularRecipeBinding) :
@@ -27,11 +28,13 @@ class PopularProductAdapter(val clickListener: (String) -> Unit
 
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemPopularRecipeBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ))
+                LayoutInflater.from(parent.context), parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chaitanya.mgrecipe.databinding.ItemRecipeSearchBinding
 import com.chaitanya.recipedata.models.SearchQueryResponseItem
 
-class SearchAdapter (val clickListener: (SearchQueryResponseItem) -> Unit
+class SearchAdapter(
+    val clickListener: (SearchQueryResponseItem) -> Unit
 ) : ListAdapter<SearchQueryResponseItem, SearchAdapter.ViewHolder>(DiffUtilCallBack()) {
 
     inner class ViewHolder(val binding: ItemRecipeSearchBinding) :
@@ -24,11 +25,13 @@ class SearchAdapter (val clickListener: (SearchQueryResponseItem) -> Unit
 
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             ItemRecipeSearchBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        ))
+                LayoutInflater.from(parent.context), parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

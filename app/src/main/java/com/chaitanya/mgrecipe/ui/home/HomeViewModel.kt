@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val repository: HomeRepository) :ViewModel() {
+class HomeViewModel @Inject constructor(private val repository: HomeRepository) : ViewModel() {
     var currentOffset = 0
     var isLoading = false
     var isMaxPageReached = false
@@ -28,19 +28,21 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
         }
     }
 
+
     private val _allRecipesData = MutableLiveData<NetworkResult<AllProductsResponse>>()
     val allRecipesData: LiveData<NetworkResult<AllProductsResponse>> get() = _allRecipesData
 
-    fun getAllRecipeData(offset:Int){
+    fun getAllRecipeData(offset: Int) {
         viewModelScope.launch {
             handleApiCall(
-                apiCall = {repository.getAllData(offset)},
+                apiCall = { repository.getAllData(offset) },
                 responseLiveData = _allRecipesData
             )
         }
     }
 
-    private val _combinedData = MutableLiveData<NetworkResult<Pair<AllProductsResponse, RandomRecipeResponse>>>()
+    private val _combinedData =
+        MutableLiveData<NetworkResult<Pair<AllProductsResponse, RandomRecipeResponse>>>()
     val combinedData: LiveData<NetworkResult<Pair<AllProductsResponse, RandomRecipeResponse>>> get() = _combinedData
 
 
@@ -60,10 +62,10 @@ class HomeViewModel @Inject constructor(private val repository: HomeRepository) 
                     val combinedResult = Pair(allRecipesData.body()!!, popularData.body()!!)
                     _combinedData.postValue(NetworkResult.Success(combinedResult))
                 } else {
-                    _combinedData.postValue(NetworkResult.Error(500,"Something Went wrong"))
+                    _combinedData.postValue(NetworkResult.Error(500, "Something Went wrong"))
                 }
             } catch (e: Exception) {
-                _combinedData.postValue(NetworkResult.Error(500,e.message ?: "An error occurred"))
+                _combinedData.postValue(NetworkResult.Error(500, e.message ?: "An error occurred"))
             }
         }
     }
