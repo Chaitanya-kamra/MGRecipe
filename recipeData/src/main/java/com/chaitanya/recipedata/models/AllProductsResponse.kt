@@ -1,0 +1,43 @@
+package com.chaitanya.recipedata.models
+
+data class AllProductsResponse(
+    val number: Int,
+    val offset: Int,
+    val results: List<SearchResult>,
+    val totalResults: Int
+)
+data class SearchResult(
+    val vegetarian: Boolean,
+    val vegan: Boolean,
+    val glutenFree: Boolean,
+    val dairyFree: Boolean,
+    val veryHealthy: Boolean,
+    val cheap: Boolean,
+    val veryPopular: Boolean,
+    val sustainable: Boolean,
+    val lowFodmap: Boolean,
+    val weightWatcherSmartPoints: Long,
+    val gaps: String,
+    val preparationMinutes: Long?,
+    val cookingMinutes: Long?,
+    val aggregateLikes: Long,
+    val healthScore: Long,
+    val creditsText: String,
+    val sourceName: String,
+    val pricePerServing: Double,
+    val id: Long,
+    val title: String,
+    val readyInMinutes: Long,
+    val servings: Long,
+    val sourceUrl: String,
+    val image: String,
+    val imageType: String,
+    val summary: String,
+    val cuisines: List<String>,
+    val dishTypes: List<String>,
+    val diets: List<String>,
+    val occasions: List<String>,
+    val spoonacularScore: Double,
+    val spoonacularSourceUrl: String,
+    val license: String?,
+)

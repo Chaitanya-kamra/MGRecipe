@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "761581073947",
+    "project_id": "recipe-c231a",
+    "storage_bucket": "recipe-c231a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761581073947:android:4d9f1b3671a7390c28eabe",
+        "android_client_info": {
+          "package_name": "com.chaitanya.mgrecipe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761581073947-o0u2a5t967navvdmq1ofhh67abevorg4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chaitanya.mgrecipe",
+            "certificate_hash": "729ab3c64232a37bdcede699b79a1d619fc623a1"
+          }
+        },
+        {
+          "client_id": "761581073947-amd9pquk029qkhh9vj28i2nrh0m54844.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6PmF-tBwo07kU7ffGrarx9DOtJe_9AiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761581073947-amd9pquk029qkhh9vj28i2nrh0m54844.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
