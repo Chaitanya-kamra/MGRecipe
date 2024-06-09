@@ -28,7 +28,9 @@ interface ApiService {
 
     @GET(GET_ALL_RECIPES)
     suspend fun getAllRecipes(
-        @Query("addRecipeInformation") addRecipeInformation : Boolean = true
+        @Query("offset") offset: Int= 0,
+        @Query("addRecipeInformation") addRecipeInformation : Boolean = true,
+        @Query("number") number: Int= 20
     ):Response<AllProductsResponse>
 
     @GET(GET_AUTOCOMPLETE_SEARCH)

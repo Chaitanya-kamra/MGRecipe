@@ -9,16 +9,16 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.chaitanya.mgrecipe.R
 import com.chaitanya.mgrecipe.databinding.LayoutRecipeBottomSheetBinding
-import com.chaitanya.mgrecipe.ui.detail.ImageTextAdapter
+import com.chaitanya.mgrecipe.ui.detail.adapters.ImageTextAdapter
+import com.chaitanya.mgrecipe.ui.search.adapters.SearchImageTextAdapter
+import com.chaitanya.mgrecipe.ui.search.adapters.SimitarRecipeAdapter
 import com.chaitanya.mgrecipe.utility.AnimationUtil
 import com.chaitanya.mgrecipe.utility.NetworkResult
 import com.chaitanya.mgrecipe.utility.gone
 import com.chaitanya.mgrecipe.utility.loadImage
 import com.chaitanya.mgrecipe.utility.visible
-import com.chaitanya.recipedata.models.SearchQueryResponseItem
 import com.chaitanya.recipedata.models.SingleRecipeResponse
 import com.chaitanya.recipedata.models.formatNutrition
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -36,7 +36,7 @@ class RecipeBottomSheet() : BottomSheetDialogFragment() {
     )
     var equipmentAdapter : ImageTextAdapter? = null
 
-    var simitarRecipeAdapter:SimitarRecipeAdapter? = null
+    var simitarRecipeAdapter: SimitarRecipeAdapter? = null
 
     var recipeId :String? = null
     var recipeTitle :String? = null
@@ -177,7 +177,7 @@ class RecipeBottomSheet() : BottomSheetDialogFragment() {
                 tvNutrients.text = data?.nutrition?.let { formatNutrition(it) }?:""
                 AnimationUtil.toggleArrow(ivToogleNutrients,false)
                 AnimationUtil.expand(tvNutrients)
-                ivToogleNutrients.setOnClickListener {
+                lnlNutrients.setOnClickListener {
                     if (tvNutrients.visibility == View.VISIBLE) {
                         AnimationUtil.collapse(tvNutrients)
                         AnimationUtil.toggleArrow(ivToogleNutrients,true)
@@ -200,7 +200,7 @@ class RecipeBottomSheet() : BottomSheetDialogFragment() {
                     SheetState.INGREDIENTS ->{
                         btnNext.text = "Get similar recipe"
                         thirdLayout.visible()
-                        AnimationUtil.collapseRecyclerView(rvIngredients)
+                        AnimationUtil.collapse(lnlRv)
                         state = SheetState.RECIPE
                     }
                     SheetState.RECIPE -> {
@@ -221,21 +221,28 @@ class RecipeBottomSheet() : BottomSheetDialogFragment() {
                 secondLayout.gone()
                 thirdLayout.gone()
                 forthLayout.gone()
-                secondLayout.requestLayout()
-                thirdLayout.requestLayout()
-                forthLayout.requestLayout()
-                scroll.requestLayout()
-                rvIngredients.requestLayout()
-//                AnimationUtil.expand(scroll)
-//                AnimationUtil.expandRecyclerView(rvIngredients)
-//                AnimationUtil.collapse(secondLayout)
+                AnimationUtil.expand(lnlRv)
+                AnimationUtil.expand(scroll)
+                AnimationUtil.expand(secondLayout)
                 AnimationUtil.expand(firstLayout)
-
-
             }
             ivClearIngredients.setOnClickListener { onclickArrow() }
-            ivClearRecipe.setOnClickListener { onclickArrow() }
-            ivClearSimilar.setOnClickListener { onclickArrow() }
+            ivClearRecipe.setOnClickListener {
+                state = SheetState.INGREDIENTS
+                btnNext.text = "Get full recipie"
+                btnNext.visible()
+                AnimationUtil.expand(lnlRv)
+                AnimationUtil.expand(scroll)
+                thirdLayout.gone()
+                forthLayout.gone()
+            }
+            ivClearSimilar.setOnClickListener {
+                state = SheetState.RECIPE
+                btnNext.text = "Get similar recipe"
+                btnNext.visible()
+                AnimationUtil.expand(scroll)
+                forthLayout.gone()
+            }
 
         }
     }

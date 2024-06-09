@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -21,8 +22,11 @@ object DataModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient {
+        val logging = HttpLoggingInterceptor()
+        logging.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(logging)
             .build()
     }
 
@@ -31,7 +35,7 @@ object DataModule {
     fun provideInterceptor(): Interceptor {
         return Interceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader("x-api-key", "8ab2a7aee90a428bb3b842b3032c71b4")
+                .addHeader("x-api-key", "569a060c812c4f3287bdef0af2aaf383")
                 .build()
             chain.proceed(request)
         }

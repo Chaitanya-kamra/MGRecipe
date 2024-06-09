@@ -15,9 +15,9 @@ class HomeRepository @Inject constructor(private val apiService: ApiService) {
         }
     }
 
-    suspend fun getAllData(): Response<AllProductsResponse> {
+    suspend fun getAllData(offset: Int = 0): Response<AllProductsResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.getAllRecipes()
+            apiService.getAllRecipes(offset)
         }
     }
 }

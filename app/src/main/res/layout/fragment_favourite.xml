@@ -19,8 +19,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        tools:visibility="gone"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_all_recipe"
-        android:layout_marginHorizontal="16dp"
         />
+    <ProgressBar
+        android:id="@+id/pbFavouriteLoad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="80dp"
+        />
+
 </LinearLayout>

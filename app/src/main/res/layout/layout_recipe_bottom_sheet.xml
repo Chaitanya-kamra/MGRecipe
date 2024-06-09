@@ -123,17 +123,23 @@
                     android:layout_marginEnd="16dp"
                     android:src="@drawable/arrow_down"/>
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvIngredients"
+            <LinearLayout
+                android:id="@+id/lnlRv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="16dp"
-                app:spanCount="3"
-                android:nestedScrollingEnabled="true"
-                tools:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/item_image_name_search"/>
+                android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvIngredients"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="16dp"
+                    app:spanCount="3"
+                    android:nestedScrollingEnabled="true"
+                    tools:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/item_image_name_search"/>
+            </LinearLayout>
+
         </LinearLayout>
         <LinearLayout
             android:id="@+id/thirdLayout"
@@ -236,7 +242,6 @@
                     android:id="@+id/rvSimilar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginHorizontal="16dp"
                     tools:visibility="visible"
                     android:nestedScrollingEnabled="true"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -1,5 +1,6 @@
 package com.chaitanya.mgrecipe.ui.home
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,12 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.chaitanya.mgrecipe.R
 import com.chaitanya.mgrecipe.databinding.FragmentHomeBinding
 import com.chaitanya.mgrecipe.utility.SharedPreference
 import com.chaitanya.mgrecipe.ui.home.adapters.AllProductsAdapter
 import com.chaitanya.mgrecipe.ui.home.adapters.PopularProductAdapter
 import com.chaitanya.mgrecipe.utility.NetworkResult
+import com.chaitanya.mgrecipe.utility.gone
+import com.chaitanya.mgrecipe.utility.setStatusBarColor
+import com.chaitanya.mgrecipe.utility.visible
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -21,7 +27,8 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     val viewModel: HomeViewModel by viewModels()
-    private var popularProductAdapter:PopularProductAdapter? = null
+    private var popularProductAdapter : PopularProductAdapter? = null
+
     private var allProductsAdapter:AllProductsAdapter? = null
 
     override fun onCreateView(
@@ -39,42 +46,70 @@ class HomeFragment : Fragment() {
         if (!SharedPreference.isLoggedIn()) {
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }else {
-
-            allProductsAdapter = AllProductsAdapter{
-                val action = HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipeId = it,recipeEntity = null)
-                findNavController().navigate(action)
-            }
-            popularProductAdapter = PopularProductAdapter{
-                val action = HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipeId = it,recipeEntity = null)
-                findNavController().navigate(action)
-            }
+            activity?.setStatusBarColor(Color.WHITE)
             binding?.apply {
                 tvUserName.text = "👋 Hey "+ (SharedPreference.getUserName()?:"")
-                rvPopular.adapter = popularProductAdapter
-                rvAll.adapter = allProductsAdapter
+
                 btnSearch.setOnClickListener {
                     findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
                 }
+                rvAll.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        super.onScrolled(recyclerView, dx, dy)
+
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                        val totalItemCount = layoutManager.itemCount
+                        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                        println(totalItemCount)
+                        println(lastVisibleItemPosition)
+                        if (!viewModel.isLoading && !viewModel.isMaxPageReached&& totalItemCount <= (lastVisibleItemPosition + 4)) {
+                            viewModel.fetchPaginatedData()
+                        }
+                    }
+                })
             }
             bindObservers()
-//            viewModel.getPopularData()
-//            viewModel.getAllRecipeData()
-
+            viewModel.fetchCombinedData()
         }
 
     }
 
     private fun bindObservers() {
-        viewModel.popularData.observe(viewLifecycleOwner){networkResult->
+        viewModel.combinedData.observe(viewLifecycleOwner){networkResult->
             when(networkResult){
                 is NetworkResult.Error -> {
-
+                    binding?.apply {
+                        flProgressOrError.visible()
+                        tvError.visible()
+                        pbLoad.gone()
+                    }
                 }
                 is NetworkResult.Loading -> {
-
+                    binding?.apply {
+                        flProgressOrError.visible()
+                        tvError.gone()
+                        pbLoad.visible()
+                    }
                 }
                 is NetworkResult.Success -> {
-                    popularProductAdapter?.submitList(networkResult.data?.recipes)
+                    binding?.apply {
+                        flProgressOrError.gone()
+                        rvAll.visible()
+                    }
+                    viewModel.currentOffset = (networkResult.data?.first?.offset ?:0)+20
+                    viewModel.isMaxPageReached = (networkResult.data?.first?.offset
+                        ?: 0) >= (networkResult.data?.first?.totalResults ?: 20)
+                    viewModel.isLoading = false
+                    allProductsAdapter = AllProductsAdapter(networkResult.data?.second){
+                        val action = HomeFragmentDirections.actionHomeFragmentToRecipeDetailFragment(recipeId = it,recipeEntity = null)
+                        findNavController().navigate(action)
+                    }
+                    binding.rvAll.apply {
+                        adapter = allProductsAdapter
+                    }
+                    val allRecipes = networkResult.data?.first?.results?.toMutableList()
+                    allRecipes?.add(0,null)
+                    allProductsAdapter?.submitList(allRecipes)
                 }
             }
         }
@@ -87,7 +122,14 @@ class HomeFragment : Fragment() {
 
                 }
                 is NetworkResult.Success -> {
-                    allProductsAdapter?.submitList(networkResult.data?.results)
+                    viewModel.isLoading = false
+                    viewModel.currentOffset = (networkResult.data?.offset?:0)+20
+                    viewModel.isMaxPageReached = (networkResult.data?.offset
+                        ?: 0) >= (networkResult.data?.totalResults ?: 20)
+                    val currentList = allProductsAdapter?.currentList?.toMutableList()
+                    networkResult.data?.results?.toMutableList()
+                        ?.let { currentList?.addAll(currentList.size, it) }
+                    allProductsAdapter?.submitList(currentList)
                 }
             }
 

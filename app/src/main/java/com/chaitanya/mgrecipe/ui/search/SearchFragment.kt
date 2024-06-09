@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.chaitanya.mgrecipe.databinding.FragmentSearchBinding
+import com.chaitanya.mgrecipe.ui.search.adapters.SearchAdapter
 import com.chaitanya.mgrecipe.utility.IskeyboardVisible
 import com.chaitanya.mgrecipe.utility.NetworkResult
 import dagger.hilt.android.AndroidEntryPoint

@@ -2,18 +2,19 @@ package com.chaitanya.mgrecipe.ui.login
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.chaitanya.mgrecipe.R
 import com.chaitanya.mgrecipe.databinding.FragmentLoginBinding
 import com.chaitanya.mgrecipe.utility.SharedPreference
 import com.chaitanya.mgrecipe.utility.gone
+import com.chaitanya.mgrecipe.utility.setStatusBarColor
 import com.chaitanya.mgrecipe.utility.visible
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -35,11 +36,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val window = activity?.window
-        window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window?.statusBarColor = resources.getColor(R.color.black)
-
+        activity?.setStatusBarColor(Color.BLACK)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.chaitanya.mgrecipe.R
 import com.chaitanya.mgrecipe.databinding.FragmentRecipeDetailBinding
+import com.chaitanya.mgrecipe.ui.detail.adapters.ImageTextAdapter
 import com.chaitanya.mgrecipe.utility.AnimationUtil
 import com.chaitanya.mgrecipe.utility.NetworkResult
 import com.chaitanya.mgrecipe.utility.gone
@@ -29,7 +30,7 @@ class RecipeDetailFragment : Fragment() {
 
     val args : RecipeDetailFragmentArgs by navArgs()
     val viewModel : DetailViewModel by viewModels()
-    var equipmentAdapter :ImageTextAdapter? = null
+    var equipmentAdapter : ImageTextAdapter? = null
 
 
     override fun onCreateView(
@@ -231,7 +232,7 @@ class RecipeDetailFragment : Fragment() {
                 tvNutrients.text = data?.nutrition?.let { formatNutrition(it) }?:""
                 AnimationUtil.toggleArrow(ivToogleNutrients,false)
                 AnimationUtil.expand(tvNutrients)
-                ivToogleNutrients.setOnClickListener {
+                lnlNutrients.setOnClickListener {
                     if (tvNutrients.visibility == View.VISIBLE) {
                         AnimationUtil.collapse(tvNutrients)
                         AnimationUtil.toggleArrow(ivToogleNutrients,true)

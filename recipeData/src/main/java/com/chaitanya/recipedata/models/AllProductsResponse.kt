@@ -3,7 +3,7 @@ package com.chaitanya.recipedata.models
 data class AllProductsResponse(
     val number: Int,
     val offset: Int,
-    val results: List<SearchResult>,
+    val results: List<SearchResult?>?,
     val totalResults: Int
 )
 data class SearchResult(

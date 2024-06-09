@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment || destination.id == R.id.searchFragment) {
+            if (destination.id == R.id.loginFragment || destination.id == R.id.searchFragment || destination.id == R.id.recipeDetailFragment) {
                 binding.bottomNavigation.gone()
             } else {
                 binding.bottomNavigation.visible()

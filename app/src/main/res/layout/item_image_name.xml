@@ -13,12 +13,13 @@
         app:cardCornerRadius="360dp"
         android:elevation="0dp"
         app:strokeColor="#E7F0F8"
-        app:cardElevation="0dp">
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white">
         <ImageView
             android:id="@+id/ivImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             tools:src="@drawable/login_background_image"/>
     </com.google.android.material.card.MaterialCardView>
     <TextView
